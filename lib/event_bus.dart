@@ -16,7 +16,7 @@ class EventBus {
   Map<dynamic, StreamSubscription> _listenIds = {};
 
   /// Controller for the event bus stream.
-  StreamController get streamController => _streamController;
+  // StreamController get streamController => _streamController;
 
   /// Creates an [EventBus].
   ///
@@ -49,9 +49,9 @@ class EventBus {
   ///
   Stream<T> _on<T>() {
     if (T == dynamic) {
-      return streamController.stream as Stream<T>;
+      return _streamController.stream as Stream<T>;
     } else {
-      return streamController.stream.where((event) => event is T).cast<T>();
+      return _streamController.stream.where((event) => event is T).cast<T>();
     }
   }
 
