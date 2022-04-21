@@ -85,10 +85,9 @@ class EventBus {
 
   /// Destroy this [EventBus]. This is generally only in a testing context.
   ///
-  void destroy() {
-    _streamController.close();
-
-    // 测试时，由于执行顺序问题，开启一下语句不会执行onDone 回调函数
-    // _listenIds.forEach((key, scription) => scription.cancel());
+  void destroy() async {
+    // 等待onDone执行完成
+    await _streamController.close();
+    _listenIds.forEach((key, scription) => scription.cancel());
   }
 }

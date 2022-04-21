@@ -38,6 +38,7 @@ main() {
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventA('a2'));
+
       eventBus.destroy();
     });
 
