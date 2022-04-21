@@ -24,88 +24,84 @@ class EventWithMap {
 main() {
   group('[EventBus]', () {
     test('Fire one event', () {
+      List<EventA> events = [];
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on<EventA>().toList();
+      eventBus.addListener<EventA>(
+        (e) => events.add(e),
+        onDone: () => expect(events.length, 1),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 1);
-      });
     });
 
     test('Fire two events of same type', () {
+      List<EventA> events = [];
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on<EventA>().toList();
+      eventBus.addListener<EventA>(
+        (e) => events.add(e),
+        onDone: () => expect(events.length, 2),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventA('a2'));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 2);
-      });
     });
 
     test('Fire events of different type', () {
+      List<EventA> eventsA = [];
+      List<EventB> eventsB = [];
+
       // given
       EventBus eventBus = EventBus();
-      Future f1 = eventBus.on<EventA>().toList();
-      Future f2 = eventBus.on<EventB>().toList();
+      eventBus.addListener<EventA>(
+        (e) => eventsA.add(e),
+        onDone: () => expect(eventsA.length, 1),
+      );
+      eventBus.addListener<EventB>(
+        (e) => eventsB.add(e),
+        onDone: () => expect(eventsB.length, 1),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventB('b1'));
       eventBus.destroy();
-
-      // then
-      return Future.wait([
-        f1.then((events) {
-          expect(events.length, 1);
-        }),
-        f2.then((events) {
-          expect(events.length, 1);
-        })
-      ]);
     });
 
     test('Fire events of different type, receive all types', () {
+      List events = [];
+
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on().toList();
+      eventBus.addListener(
+        (e) => events.add(e),
+        onDone: () => expect(events.length, 3),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventB('b1'));
       eventBus.fire(EventB('b2'));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 3);
-      });
     });
 
     test('Fire event with a map type', () {
+      List<EventWithMap> events = [];
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on<EventWithMap>().toList();
+      eventBus.addListener<EventWithMap>(
+        (e) => events.add(e),
+        onDone: () => expect(events.length, 1),
+      );
 
       // when
       eventBus.fire(EventWithMap({'a': 'test'}));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 1);
-      });
     });
   });
 }

@@ -20,35 +20,33 @@ class SuperEvent {}
 main() {
   group('[EventBus] (hierarchical)', () {
     test('Listen on same class', () {
+      List<EventA> events = [];
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on<EventA>().toList();
+      eventBus.addListener<EventA>(
+        (EventA e) => events.add(e),
+        onDone: () => expect(events.length, 1),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventB('b1'));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 1);
-      });
     });
 
     test('Listen on superclass', () {
+      List<SuperEvent> events = [];
       // given
       EventBus eventBus = EventBus();
-      Future f = eventBus.on<SuperEvent>().toList();
+      eventBus.addListener<SuperEvent>(
+        (SuperEvent e) => events.add(e),
+        onDone: () => expect(events.length, 2),
+      );
 
       // when
       eventBus.fire(EventA('a1'));
       eventBus.fire(EventB('b1'));
       eventBus.destroy();
-
-      // then
-      return f.then((events) {
-        expect(events.length, 2);
-      });
     });
   });
 }

@@ -15,9 +15,7 @@ void main() {
   initLogging();
 
   // Log all events.
-  eventBus
-      .on()
-      .listen((event) => _log.finest('event fired:  ${event.runtimeType}'));
+  eventBus.addListener((event) => _log.finest('event fired:  ${event.runtimeType}'));
 
   // Initialize the listener boxes.
   Listener(querySelector('#listener-1')!);
@@ -67,14 +65,8 @@ class Listener {
   Listener(this.element) {
     output = element.querySelector('textarea') as TextAreaElement;
     // Init buttons.
-    element
-        .querySelector('.listen-a')!
-        .onClick
-        .listen((_) => listenForEventA());
-    element
-        .querySelector('.listen-b')!
-        .onClick
-        .listen((_) => listenForEventB());
+    element.querySelector('.listen-a')!.onClick.listen((_) => listenForEventA());
+    element.querySelector('.listen-b')!.onClick.listen((_) => listenForEventB());
     element.querySelector('.pause')!.onClick.listen((_) => pause());
     element.querySelector('.resume')!.onClick.listen((_) => resume());
     element.querySelector('.cancel')!.onClick.listen((_) => cancel());
@@ -87,7 +79,7 @@ class Listener {
       // -------------------------------------------------
       // Listen for Event A
       // -------------------------------------------------
-      subscription = eventBus.on<MyEventA>().listen((event) {
+      subscription = eventBus.addListener<MyEventA>((event) {
         appendOuput(event.text);
       });
       appendOuput('---');
@@ -103,7 +95,7 @@ class Listener {
       // -------------------------------------------------
       // Listen for Event B
       // -------------------------------------------------
-      subscription = eventBus.on<MyEventB>().listen((MyEventB event) {
+      subscription = eventBus.addListener<MyEventB>((MyEventB event) {
         appendOuput(event.text);
       });
       appendOuput('---');
