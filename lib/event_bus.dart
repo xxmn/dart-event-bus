@@ -87,5 +87,8 @@ class EventBus {
   ///
   void destroy() {
     _streamController.close();
+
+    // 测试时，由于执行顺序问题，开启一下语句不会执行onDone 回调函数
+    // _listenIds.forEach((key, scription) => scription.cancel());
   }
 }

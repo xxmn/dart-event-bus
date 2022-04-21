@@ -29,11 +29,15 @@ main() {
       EventBus eventBus = EventBus();
       eventBus.addListener<EventA>(
         (e) => events.add(e),
-        onDone: () => expect(events.length, 1),
+        onDone: () {
+          // print("-----------on Done.............");
+          expect(events.length, 2);
+        },
       );
 
       // when
       eventBus.fire(EventA('a1'));
+      eventBus.fire(EventA('a2'));
       eventBus.destroy();
     });
 
